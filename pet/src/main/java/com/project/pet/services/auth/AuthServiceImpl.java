@@ -21,7 +21,6 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class AuthServiceImpl implements AuthService{
     private final UserRepository userRepository;
     private final AccessTokenService accessTokenService;
@@ -32,14 +31,12 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public AuthResponse loginUser(LoginRequest request) throws BadRequestException, IllegalAccessException {
         UserEntity user = findUserByEmail(request.getEmail());
-        log.info("RECEIVED REQUEST: {}", request);
-        if(isPasswordCorrect(request.getPassword(), user.getHashPassword())) {
+        if(!isPasswordCorrect(request.getPassword(), user.getHashPassword())) {
             throw new BadRequestException("Неверный пароль");
         }
         if(user.isBlocked()) {
             throw new IllegalAccessException("Ваш аккаунт забллокирован");
         }
-        log.info("RECEIVED USER: {}", user);
         return getTokenPair(user);
     }
 
@@ -67,8 +64,7 @@ public class AuthServiceImpl implements AuthService{
     }
 
     private boolean isPasswordCorrect(String password, String hashPassword) {
-//        return passwordEncoder.matches(password, hashPassword);
-        return Objects.equals(password, hashPassword);
+        return passwordEncoder.matches(password, hashPassword);
     }
 
     private AuthResponse getTokenPair(UserEntity user) {

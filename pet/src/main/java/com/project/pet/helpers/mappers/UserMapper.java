@@ -18,8 +18,8 @@ public class UserMapper {
         newUser.setEmail(request.getEmail());
         newUser.setBlocked(false);
         newUser.setRole(UserRole.CLIENT);
-       // newUser.setHashPassword(passwordEncoder.encode(request.getPassword()));
-        newUser.setHashPassword(request.getPassword());
+        newUser.setHashPassword(passwordEncoder.encode(request.getPassword()));
+
         return newUser;
     }
 }
