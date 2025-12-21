@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
-@Slf4j
 public class AuthController {
     private final AuthService authService;
     public AuthController(@Autowired AuthService authService) {
@@ -25,7 +24,6 @@ public class AuthController {
     }
     @PostMapping("/sign-in")
     public ResponseEntity<AuthResponse> loginUser(@RequestBody @Valid LoginRequest request) throws BadRequestException, IllegalAccessException {
-        log.info("RECEIVED REQUEST: {}", request);
         return ResponseEntity.ok(authService.loginUser(request));
     }
     @PostMapping("/sign-up")

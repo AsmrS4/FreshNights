@@ -12,7 +12,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
   flyway:
     enabled: true
@@ -37,7 +37,8 @@ jwt:
 
 logging:
   level:
-    root: INFO
+    org.springframework.security: trace
     org.apache.http: DEBUG
+    root: INFO
     com.example: DEBUG
 
