@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+#  application:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    container_name: project_backend
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5433/events_db
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=postgres
+#    ports:
+#      - '8080:8080'
+#    networks:
+#      - app_network
+#    depends_on:
+#      - database
+
+  events_db:
+    image: 'postgres:15'
+    container_name: events_db
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=events_db
+
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    networks:
+      - app_network
+
+volumes:
+  db_data:
+
+networks:
+  app_network:
+    driver: bridge
