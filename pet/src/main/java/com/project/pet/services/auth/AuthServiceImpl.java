@@ -6,6 +6,7 @@ import com.project.pet.domain.requests.CreateAccountRequest;
 import com.project.pet.domain.requests.LoginRequest;
 import com.project.pet.domain.requests.RefreshSessionRequest;
 import com.project.pet.domain.responses.AuthResponse;
+import com.project.pet.helpers.encoder.PasswordEncoderManager;
 import com.project.pet.helpers.mappers.UserMapper;
 import com.project.pet.services.token.AccessTokenService;
 import com.project.pet.services.token.RefreshTokenService;
@@ -31,7 +32,7 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public AuthResponse loginUser(LoginRequest request) throws BadRequestException, IllegalAccessException {
         UserEntity user = findUserByEmail(request.getEmail());
-        if(!isPasswordCorrect(request.getPassword(), user.getHashPassword())) {
+        if(!PasswordEncoderManager.isPasswordCorrect(request.getPassword(), user.getHashPassword())) {
             throw new BadRequestException("Неверный пароль");
         }
         if(user.isBlocked()) {
@@ -61,10 +62,6 @@ public class AuthServiceImpl implements AuthService{
 
     private boolean existByEmail(String email) {
         return userRepository.existsByEmail(email);
-    }
-
-    private boolean isPasswordCorrect(String password, String hashPassword) {
-        return passwordEncoder.matches(password, hashPassword);
     }
 
     private AuthResponse getTokenPair(UserEntity user) {

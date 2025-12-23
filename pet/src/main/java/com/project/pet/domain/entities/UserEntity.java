@@ -17,6 +17,7 @@ public class UserEntity {
     private String firstName;
     private String lastName;
     private String email;
+    private String image;
     private UserRole role;
     private String hashPassword;
     private boolean isBlocked;
