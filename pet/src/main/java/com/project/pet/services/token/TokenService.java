@@ -21,6 +21,10 @@ public abstract class TokenService {
         return UUID.fromString(getClaims(token).getId());
     }
 
+    public String getUserRole(String token) {
+        return getClaims(token).get("role").toString();
+    }
+
     public boolean isTokenValid(String token, UserEntity user) {
         UUID tokenOwnerId = getUserId(token);
         UUID currentUserId = user.getId();
@@ -50,12 +54,14 @@ public abstract class TokenService {
     protected String generateToken(UserEntity userEntity, Duration lifeTime) {
         Date issuedAt = new Date();
         Date expiredAt = new Date(issuedAt.getTime() + lifeTime.toMillis());
+
         return Jwts.builder()
                 .setIssuedAt(issuedAt)
                 .setExpiration(expiredAt)
                 .setId(String.valueOf(userEntity.getId()))
                 .setSubject(userEntity.getEmail())
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .claim("role", userEntity.getRole())
                 .compact();
     }
 
