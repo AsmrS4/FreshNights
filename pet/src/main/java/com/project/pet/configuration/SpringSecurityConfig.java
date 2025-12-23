@@ -1,5 +1,9 @@
 package com.project.pet.configuration;
 
+import com.project.pet.configuration.filters.AccessDeniedFilter;
+import com.project.pet.configuration.filters.AuthEntryPoint;
+import com.project.pet.configuration.filters.JwtAuthFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -15,12 +20,14 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SpringSecurityConfig {
-
     private final JwtAuthFilter authFilter;
+    private final AccessDeniedFilter accessDeniedFilter;
 
-    public SpringSecurityConfig(@Autowired JwtAuthFilter authFilter) {
-        this.authFilter = authFilter;
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new AuthEntryPoint();
     }
 
     @Bean
@@ -47,10 +54,15 @@ public class SpringSecurityConfig {
                                 "/swagger-ui.html")
                         .permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/users/**").authenticated()
+                        .requestMatchers("/api/users/me", "/api/users/change-password").authenticated()
+                        .requestMatchers("/api/users/**").hasAnyRole("MANAGER", "ADMIN")
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(c->c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(e -> e
+                        .authenticationEntryPoint(authenticationEntryPoint())
+                        .accessDeniedHandler(accessDeniedFilter)
+                )
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

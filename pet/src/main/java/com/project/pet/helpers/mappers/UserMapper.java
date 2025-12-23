@@ -40,6 +40,7 @@ public class UserMapper {
         userEntity.setEmail(request.getEmail());
         userEntity.setFirstName(request.getFirstName());
         userEntity.setLastName(request.getLastName());
+        userEntity.setImage(request.getImage());
 
         return  userEntity;
     }

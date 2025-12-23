@@ -1,7 +1,6 @@
-package com.project.pet.configuration;
+package com.project.pet.configuration.filters;
 
 import com.project.pet.services.token.AccessTokenService;
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
