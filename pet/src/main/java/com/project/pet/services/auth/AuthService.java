@@ -9,5 +9,7 @@ import org.apache.coyote.BadRequestException;
 public interface AuthService {
     AuthResponse loginUser(LoginRequest request) throws BadRequestException, IllegalAccessException;
     AuthResponse createUserAccount(CreateAccountRequest request) throws BadRequestException;
+    AuthResponse createStaffAccount(CreateAccountRequest request) throws BadRequestException;
+    AuthResponse createAdminAccount(CreateAccountRequest request) throws BadRequestException;
     AuthResponse refreshSession(RefreshSessionRequest request);
 }

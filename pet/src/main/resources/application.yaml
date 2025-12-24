@@ -1,19 +1,32 @@
 server:
   port: 8080
 
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+      force-request: true
+      force-response: true
+
+  tomcat:
+    uri-encoding: UTF-8
+
 spring:
   application:
     name: pet
+
   datasource:
     url: jdbc:postgresql://localhost:5432/events_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
