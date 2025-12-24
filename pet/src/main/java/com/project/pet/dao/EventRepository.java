@@ -12,6 +12,6 @@ import java.util.UUID;
 @Repository
 public interface EventRepository extends JpaRepository<EventEntity, UUID> {
     Optional<EventEntity> findEventById(UUID eventId);
-    @Query("SELECT * FROM EventEntity ee WHERE ee.status = 0")
+    @Query("SELECT ee FROM EventEntity ee WHERE ee.status = 0")
     List<EventEntity> findAllActive();
 }
