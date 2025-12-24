@@ -2,10 +2,12 @@ package com.project.pet.services.event;
 
 import com.project.pet.dao.EventRepository;
 import com.project.pet.domain.entities.EventEntity;
+import com.project.pet.domain.enums.EventStatus;
 import com.project.pet.domain.models.Event;
 import com.project.pet.domain.requests.EventCreateRequest;
 import com.project.pet.domain.requests.UpdateEventRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.project.pet.helpers.mappers.EventMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,24 +15,27 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
-    public EventServiceImpl(@Autowired EventRepository eventRepository) {
-        this.eventRepository = eventRepository;
-    }
+    private final EventMapper eventMapper;
     @Override
     public Event createEvent(EventCreateRequest request) {
-        return null;
+        EventEntity newEvent = eventMapper.mapToEntity(request);
+        saveEvent(newEvent);
+        return eventMapper.mapToDto(newEvent);
     }
 
     @Override
     public Event retrieveEventDetails(UUID eventId) {
-        return null;
+        EventEntity event = findEventById(eventId);
+        return eventMapper.mapToDto(event);
     }
 
     @Override
     public List<Event> retrieveEvents() {
-        return List.of();
+        List<EventEntity> events = eventRepository.findAllActive();
+        return events.stream().map(eventMapper::mapToDto).toList();
     }
 
     @Override
@@ -40,12 +45,18 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event updateEventDetails(UUID eventId, UpdateEventRequest request) {
-        return null;
+        EventEntity event = findEventById(eventId);
+        eventMapper.mergeToEntity(event, request);
+        saveEvent(event);
+        return eventMapper.mapToDto(event);
     }
 
     @Override
     public boolean cancelEvent(UUID eventId) {
-        return false;
+        EventEntity event = findEventById(eventId);
+        event.setStatus(EventStatus.CANCELED);
+        saveEvent(event);
+        return true;
     }
 
     private EventEntity findEventById(UUID eventId) {
@@ -54,7 +65,7 @@ public class EventServiceImpl implements EventService {
         );
     }
 
-    private EventEntity saveEvent(EventEntity event) {
-        return eventRepository.save(event);
+    private void saveEvent(EventEntity event) {
+        eventRepository.save(event);
     }
 }
