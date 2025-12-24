@@ -2,6 +2,7 @@ package com.project.pet.services.auth;
 
 import com.project.pet.dao.UserRepository;
 import com.project.pet.domain.entities.UserEntity;
+import com.project.pet.domain.enums.UserRole;
 import com.project.pet.domain.requests.CreateAccountRequest;
 import com.project.pet.domain.requests.LoginRequest;
 import com.project.pet.domain.requests.RefreshSessionRequest;
@@ -50,6 +51,30 @@ public class AuthServiceImpl implements AuthService{
         UserEntity user = userRepository.save(userMapper.mapToNewUser(request));
 
         return getTokenPair(user);
+    }
+
+    @Override
+    public AuthResponse createStaffAccount(CreateAccountRequest request) throws BadRequestException {
+        if(existByEmail(request.getEmail())) {
+            throw new BadRequestException("Пользователь с таким email уже существует");
+        }
+        userMapper.setPasswordEncoder(passwordEncoder);
+        UserEntity staff = userMapper.mapToNewUser(request);
+        staff.setRole(UserRole.MANAGER);
+        userRepository.save(staff);
+        return getTokenPair(staff);
+    }
+
+    @Override
+    public AuthResponse createAdminAccount(CreateAccountRequest request) throws BadRequestException {
+        if(existByEmail(request.getEmail())) {
+            throw new BadRequestException("Пользователь с таким email уже существует");
+        }
+        userMapper.setPasswordEncoder(passwordEncoder);
+        UserEntity admin = userMapper.mapToNewUser(request);
+        admin.setRole(UserRole.ADMIN);
+        userRepository.save(admin);
+        return getTokenPair(admin);
     }
 
     @Override
