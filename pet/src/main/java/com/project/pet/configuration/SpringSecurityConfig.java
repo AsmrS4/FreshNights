@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -54,8 +55,10 @@ public class SpringSecurityConfig {
                                 "/swagger-ui.html")
                         .permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/events", "/api/events/{eventId}").permitAll()
                         .requestMatchers("/api/users/me", "/api/users/change-password").authenticated()
                         .requestMatchers("/api/users/**").hasAnyRole("MANAGER", "ADMIN")
+                        .requestMatchers("/api/events/**").hasAnyRole("MANAGER", "ADMIN")
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(c->c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
