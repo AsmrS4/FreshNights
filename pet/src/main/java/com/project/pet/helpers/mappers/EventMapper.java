@@ -3,6 +3,7 @@ package com.project.pet.helpers.mappers;
 import com.project.pet.domain.entities.EventEntity;
 import com.project.pet.domain.enums.EventStatus;
 import com.project.pet.domain.models.Event;
+import com.project.pet.domain.models.EventShort;
 import com.project.pet.domain.requests.EventCreateRequest;
 import com.project.pet.domain.requests.UpdateEventRequest;
 import org.springframework.stereotype.Component;
@@ -39,5 +40,15 @@ public class EventMapper {
         event.setImages(request.getImages());
         event.setStatus(request.getStatus());
         event.setDateTime(request.getDateTime());
+    }
+
+    public EventShort mapToShort(EventEntity event) {
+        EventShort eventShort = new EventShort();
+        eventShort.setId(event.getId());
+        eventShort.setImage(event.getImages().getFirst());
+        eventShort.setTitle(event.getTitle());
+        eventShort.setStatus(event.getStatus());
+        eventShort.setDateTime(event.getDateTime());
+        return eventShort;
     }
 }

@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -21,4 +23,6 @@ public class EventEntity {
     private EventStatus status = EventStatus.ACTIVE;
     private LocalDateTime dateTime;
     private LocalDateTime createTime = LocalDateTime.now();
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<BookingEntity> bookings;
 }
