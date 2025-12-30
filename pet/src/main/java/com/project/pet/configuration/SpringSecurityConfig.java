@@ -59,7 +59,7 @@ public class SpringSecurityConfig {
                         .requestMatchers("/api/users/me", "/api/users/change-password").authenticated()
                         .requestMatchers("/api/users/**").hasAnyAuthority("MANAGER", "ADMIN")
                         .requestMatchers("/api/events/**").hasAnyAuthority("MANAGER", "ADMIN")
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(c->c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(e -> e
