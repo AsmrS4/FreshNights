@@ -25,4 +25,6 @@ public class EventEntity {
     private LocalDateTime createTime = LocalDateTime.now();
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<BookingEntity> bookings;
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ReviewEntity> reviews;
 }

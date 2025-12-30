@@ -27,6 +27,8 @@ public class UserEntity {
     private LocalDateTime accountCreateTime = LocalDateTime.now();
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<BookingEntity> bookings;
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ReviewEntity> reviews;
     @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private TokenEntity refreshToken;
 }
