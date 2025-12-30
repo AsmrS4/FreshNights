@@ -14,7 +14,7 @@ import java.util.UUID;
 public class Booking {
     private UUID id;
     private BookingStatus status;
-    private User owner;
-    private Event event;
+    private UserShort owner;
+    private EventShort event;
     private LocalDateTime createTime;
 }

@@ -17,10 +17,10 @@ public class BookingMapper {
         Booking bookingDto = new Booking();
         bookingDto.setId(booking.getId());
         bookingDto.setOwner(
-                userMapper.mapToDto(booking.getOwner())
+                userMapper.mapToShort(booking.getOwner())
         );
         bookingDto.setEvent(
-                eventMapper.mapToDto(booking.getEvent())
+                eventMapper.mapToShort(booking.getEvent())
         );
         bookingDto.setStatus(booking.getStatus());
         bookingDto.setCreateTime(booking.getCreateTime());
