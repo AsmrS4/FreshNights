@@ -2,12 +2,10 @@ version: '3.8'
 
 services:
 #  application:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
+#    image: events-image:latest
 #    container_name: project_backend
 #    environment:
-#      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5433/events_db
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://events_db:5432/events_db
 #      - SPRING_DATASOURCE_USERNAME=postgres
 #      - SPRING_DATASOURCE_PASSWORD=postgres
 #    ports:
@@ -15,7 +13,7 @@ services:
 #    networks:
 #      - app_network
 #    depends_on:
-#      - database
+#      - events_db
 
   events_db:
     image: 'postgres:15'

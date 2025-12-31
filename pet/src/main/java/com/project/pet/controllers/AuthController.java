@@ -34,4 +34,14 @@ public class AuthController {
     public ResponseEntity<AuthResponse> refreshUserSession(@RequestBody @Valid RefreshSessionRequest request) {
         return ResponseEntity.ok(authService.refreshSession(request));
     }
+
+    @PostMapping("/sign-up/staff")
+    public ResponseEntity<AuthResponse> createStaffAccount(@RequestBody @Valid CreateAccountRequest request) throws BadRequestException {
+        return ResponseEntity.ok(authService.createStaffAccount(request));
+    }
+
+    @PostMapping("/sign-up/admin")
+    public ResponseEntity<AuthResponse> createAdminAccount(@RequestBody @Valid CreateAccountRequest request) throws BadRequestException {
+        return ResponseEntity.ok(authService.createAdminAccount(request));
+    }
 }

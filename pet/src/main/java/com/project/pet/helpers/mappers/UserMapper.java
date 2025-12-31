@@ -3,6 +3,7 @@ package com.project.pet.helpers.mappers;
 import com.project.pet.domain.entities.UserEntity;
 import com.project.pet.domain.enums.UserRole;
 import com.project.pet.domain.models.User;
+import com.project.pet.domain.models.UserShort;
 import com.project.pet.domain.requests.CreateAccountRequest;
 import com.project.pet.domain.requests.UpdateProfileRequest;
 import lombok.Setter;
@@ -43,5 +44,13 @@ public class UserMapper {
         userEntity.setImage(request.getImage());
 
         return  userEntity;
+    }
+    public UserShort mapToShort(UserEntity user) {
+        UserShort userShort = new UserShort();
+        userShort.setId(user.getId());
+        userShort.setFirstName(user.getFirstName());
+        userShort.setLastName(user.getLastName());
+        userShort.setImage(user.getImage());
+        return userShort;
     }
 }

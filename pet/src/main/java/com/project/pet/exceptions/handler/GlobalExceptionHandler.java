@@ -13,39 +13,35 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @ControllerAdvice
 @Hidden
 public class GlobalExceptionHandler {
-    @ExceptionHandler(UsernameNotFoundException.class)
-    ResponseEntity<Map<String, Object>> handleUserNotFoundException(UsernameNotFoundException ex) {
-        Map<String, Object> errors = new HashMap<>();
-        errors.put("status: ", HttpStatus.NOT_FOUND.value());
-        errors.put("error: ", ex.getMessage());
-        return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
-    }
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<String> handleException(Exception ex) {
         return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleUserNotFoundException(UsernameNotFoundException ex) {
+       return getResponse(HttpStatus.NOT_FOUND, ex);
+    }
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<Map<String, Object>> handleNoSuchElementException(NoSuchElementException ex) {
+        return getResponse(HttpStatus.NOT_FOUND, ex);
+    }
     @ExceptionHandler(JwtException.class)
-    ResponseEntity<Map<String, Object>> handleCustomJwtException(JwtException ex) {
-        Map<String, Object> errors = new HashMap<>();
-        errors.put("status: ", HttpStatus.UNAUTHORIZED.value());
-        errors.put("error: ", ex.getMessage());
-        return new ResponseEntity<>(errors, HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<Map<String, Object>> handleCustomJwtException(JwtException ex) {
+        return getResponse(HttpStatus.UNAUTHORIZED, ex);
     }
 
     @ExceptionHandler(BadRequestException.class)
-    ResponseEntity<Map<String, Object>> handleBadRequestException(BadRequestException ex) {
-        Map<String, Object> errors = new HashMap<>();
-        errors.put("status: ", HttpStatus.BAD_REQUEST.value());
-        errors.put("error: ", ex.getMessage());
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Map<String, Object>> handleBadRequestException(BadRequestException ex) {
+        return getResponse(HttpStatus.BAD_REQUEST, ex);
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    ResponseEntity<Map<String, Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Map<String, Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         Map<String, Object> response = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error -> {
@@ -55,5 +51,10 @@ public class GlobalExceptionHandler {
         response.put("errors", errors);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-
+    private ResponseEntity<Map<String, Object>> getResponse(HttpStatus status, Exception ex) {
+        Map<String, Object> errors = new HashMap<>();
+        errors.put("status: ", status.value());
+        errors.put("error: ", ex.getMessage());
+        return new ResponseEntity<>(errors, status);
+    }
 }
